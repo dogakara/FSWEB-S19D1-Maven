@@ -30,8 +30,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-
 @WebMvcTest(value = {ApplicationPropertiesAndControllerTests.class, FruitController.class})
 @ExtendWith(ResultAnalyzer2.class)
 class ApplicationPropertiesAndControllerTests {
@@ -57,13 +55,12 @@ class ApplicationPropertiesAndControllerTests {
         sampleFruit.setPrice(20.0);
         sampleFruit.setFruitType(FruitType.SWEET);
     }
+
     @Test
     @DisplayName("application properties istenilenler eklendi mi?")
-    void serverPortIsSetTo8585() {
-
+    void serverPortIsSetTo8080() {
         String serverPort = env.getProperty("server.port");
         assertThat(serverPort).isEqualTo("8080");
-
 
         String datasourceUrl = env.getProperty("spring.datasource.url");
         assertNotNull(datasourceUrl);
@@ -76,8 +73,6 @@ class ApplicationPropertiesAndControllerTests {
 
         String hibernateDdlAuto = env.getProperty("spring.jpa.hibernate.ddl-auto");
         assertNotNull(hibernateDdlAuto);
-
-
     }
 
     @Test
@@ -124,8 +119,6 @@ class ApplicationPropertiesAndControllerTests {
                 .andExpect(status().isOk());
     }
 
-
-
     @Test
     void testDeleteFruitSuccess() throws Exception {
         when(fruitService.delete(anyLong())).thenReturn(sampleFruit);
@@ -133,5 +126,3 @@ class ApplicationPropertiesAndControllerTests {
                 .andExpect(status().isOk());
     }
 }
-
-

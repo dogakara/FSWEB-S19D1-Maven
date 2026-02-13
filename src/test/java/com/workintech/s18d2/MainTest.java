@@ -41,15 +41,12 @@ class MainTest {
     @Mock
     private FruitRepository mockFruitRepository;
 
-
-
     private FruitServiceImpl fruitService;
 
     private Fruit sampleFruitForFruitServiceTest;
 
     @BeforeEach
     void setup() {
-
         Fruit apple = new Fruit();
         apple.setName("Apple");
         apple.setPrice(15.0);
@@ -67,6 +64,8 @@ class MainTest {
         sampleFruitForFruitServiceTest = new Fruit();
         sampleFruitForFruitServiceTest.setId(1L);
         sampleFruitForFruitServiceTest.setName("Apple");
+        sampleFruitForFruitServiceTest.setPrice(15.0);
+        sampleFruitForFruitServiceTest.setFruitType(FruitType.SWEET);
 
         fruitService = new FruitServiceImpl(mockFruitRepository);
     }
@@ -111,11 +110,10 @@ class MainTest {
         assertEquals(2L, vegetable.getId());
         assertEquals("Carrot", vegetable.getName());
         assertEquals(20.0, vegetable.getPrice());
-        assertFalse(vegetable.isGrownOnTree());
-
+        assertFalse(vegetable.getGrownOnTree());
 
         vegetable.setGrownOnTree(true);
-        assertTrue(vegetable.isGrownOnTree());
+        assertTrue(vegetable.getGrownOnTree());
     }
 
     @Test
@@ -162,7 +160,7 @@ class MainTest {
     }
 
     @Test
-    @DisplayName("FruitService::getAll() should return all fruits")
+    @DisplayName("FruitService::getByPriceAsc() should return all fruits")
     void testGetByPriceAscFruitService() {
         when(mockFruitRepository.getByPriceAsc()).thenReturn(Arrays.asList(sampleFruitForFruitServiceTest));
 
@@ -173,14 +171,19 @@ class MainTest {
     }
 
     @Test
-    @DisplayName("FruitService::getAll() should return all fruits")
+    @DisplayName("FruitService::save() should return the saved fruit")
     void testSaveFruitService() {
-        when(mockFruitRepository.save(any(Fruit.class))).thenReturn(sampleFruitForFruitServiceTest);
+        Fruit fruit = new Fruit();
+        fruit.setName("Apple");
+        fruit.setPrice(15.0);
+        fruit.setFruitType(FruitType.SWEET);
 
-        Fruit savedFruit = fruitService.save(new Fruit());
+        when(mockFruitRepository.save(any(Fruit.class))).thenReturn(fruit);
+
+        Fruit savedFruit = fruitService.save(fruit);
 
         assertNotNull(savedFruit);
-        assertEquals(sampleFruitForFruitServiceTest.getName(), savedFruit.getName());
+        assertEquals(fruit.getName(), savedFruit.getName());
     }
 
     @Test
@@ -206,7 +209,4 @@ class MainTest {
         assertEquals(1, fruits.size());
         assertEquals(sampleFruitForFruitServiceTest.getName(), fruits.get(0).getName());
     }
-
-
-
 }
